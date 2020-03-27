@@ -5,6 +5,8 @@ var VistaAdministrador = function(modelo, controlador, elementos) {
   this.modelo = modelo;
   this.controlador = controlador;
   this.elementos = elementos;
+  this.reconstruirLista();
+  this.configuracionDeBotones();
   var contexto = this;
 
   // suscripción de observadores
@@ -26,27 +28,24 @@ VistaAdministrador.prototype = {
   construirElementoPregunta: function(pregunta){
     var contexto = this;
     //asignar a nuevoitem un elemento li con clase "list-group-item", id "pregunta.id" y texto "pregunta.textoPregunta"
-    var nuevoItem = $('<li id= pregunta.id class="list-group-item">pregunta.textoPregunta</li>');
+    
+    var nuevoItem;
+    nuevoItem = document.createElement("li");
+    $(nuevoItem).addClass('list-group-item');
+    $(nuevoItem).attr('id', pregunta.id);
+    $(nuevoItem).text(pregunta.textoPregunta);
 
-    // var nuevoItem = $('<li/>', {
-    //   'class': 'list-group-item',
-    //   'id': pregunta.id,
-    //   'text': pregunta.textoPregunta
-    // });
-
-    // var nuevoItem = $('<li>');
-    // nuevoItem.text(pregunta.textoPregunta);
-    // nuevoItem.addClass("list-group-item");
-    // nuevoItem.addId(pregunta.id);
     var interiorItem = $('.d-flex');
     var titulo = interiorItem.find('h5');
+
     titulo.text(pregunta.textoPregunta);
     interiorItem.find('small').text(pregunta.cantidadPorRespuesta.map(function(resp){
       return " " + resp.textoRespuesta;
     }));
-    nuevoItem.html($('.d-flex').html());
+    $(nuevoItem).html($('.d-flex').html());
     return nuevoItem;
   },
+
 
   reconstruirLista: function() {
     var lista = this.elementos.lista;
@@ -57,6 +56,7 @@ VistaAdministrador.prototype = {
     }
   },
 
+
   configuracionDeBotones: function(){
     var e = this.elementos;
     var contexto = this;
@@ -66,11 +66,27 @@ VistaAdministrador.prototype = {
       var value = e.pregunta.val();
       var respuestas = [];
 
+      console.log($(this).val())
+
+      var respuestaVacia = false
+
       $('[name="option[]"]').each(function() {
+
+        if ($(this).val() === ''){
+          respuestaVacia = true          
+        }else{
+        respuestas.push({ 'textoRespuesta': $(this).val(), 'cantidad': 0});
         //completar
+        }
+        return respuestaVacia;
       })
+      
+      if(respuestaVacia){
+        return;
+      }else{
       contexto.limpiarFormulario();
       contexto.controlador.agregarPregunta(value, respuestas);
+      }
     });
     //asociar el resto de los botones a eventos
   },
