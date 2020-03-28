@@ -65,24 +65,21 @@ VistaAdministrador.prototype = {
     e.botonAgregarPregunta.click(function() {
       var value = e.pregunta.val();
       var respuestas = [];
-
-      console.log($(this).val())
-
-      var respuestaVacia = false
+      var respuestaVacia = 0;
 
       $('[name="option[]"]').each(function() {
-
         if ($(this).val() === ''){
-          respuestaVacia = true          
+          respuestaVacia += 1;
+          return;
         }else{
-        respuestas.push({ 'textoRespuesta': $(this).val(), 'cantidad': 0});
-        //completar
+          respuestas.push({ 'textoRespuesta': $(this).val(), 'cantidad': 0 });
         }
-        return respuestaVacia;
+        //completar
+        return respuestaVacia
       })
-      
-      if(respuestaVacia){
-        return;
+
+      if(respuestaVacia > 1){
+        return
       }else{
       contexto.limpiarFormulario();
       contexto.controlador.agregarPregunta(value, respuestas);
