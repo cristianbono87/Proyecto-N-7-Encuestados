@@ -13,8 +13,14 @@ var VistaAdministrador = function(modelo, controlador, elementos) {
   this.modelo.preguntaAgregada.suscribir(function() {
     contexto.reconstruirLista();
   });
+
   this.modelo.preguntaEliminada.suscribir(function () { 
-    contexto.reconstruirLista(); });
+    contexto.reconstruirLista();
+  });
+
+  this.modelo.borrarTodasPreguntas.suscribir(function () {
+    contexto.reconstruirLista();
+  });
 };
 
 
@@ -95,6 +101,19 @@ VistaAdministrador.prototype = {
         if(id){
           contexto.controlador.borrarPregunta(id);
         }
+    });
+
+
+    e.botonEditarPregunta.click(function () {
+      var id = parseInt($('.list-group-item.active').attr('id'));
+      console.log(id);//!despues borrar
+      if (id) {
+        contexto.controlador.editarPregunta(id);
+      }
+    });
+
+    e.borrarTodo.click(function () {
+        contexto.controlador.borrarAllPreguntas();
     });
   },
 
