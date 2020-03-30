@@ -10,11 +10,15 @@ var VistaAdministrador = function(modelo, controlador, elementos) {
   var contexto = this;
 
   // suscripción de observadores
-  this.modelo.preguntaAgregada.suscribir(function() {
+  this.modelo.preguntaAgregada.suscribir(function () {
     contexto.reconstruirLista();
   });
 
   this.modelo.preguntaEliminada.suscribir(function () { 
+    contexto.reconstruirLista();
+  });
+
+  this.modelo.preguntaEditada.suscribir(function () {
     contexto.reconstruirLista();
   });
 
@@ -97,7 +101,6 @@ VistaAdministrador.prototype = {
     //asociar el resto de los botones a eventos
     e.botonBorrarPregunta.click(function () {
         var id = parseInt($('.list-group-item.active').attr('id'));
-        console.log(id);//!despues borrar
         if(id){
           contexto.controlador.borrarPregunta(id);
         }
@@ -106,9 +109,9 @@ VistaAdministrador.prototype = {
 
     e.botonEditarPregunta.click(function () {
       var id = parseInt($('.list-group-item.active').attr('id'));
-      console.log(id);//!despues borrar
       if (id) {
-        contexto.controlador.editarPregunta(id);
+        var textoNuevo = prompt('Ingrese nuevo valor');
+        contexto.controlador.editarPregunta(id, textoNuevo);
       }
     });
 
