@@ -35,12 +35,8 @@ VistaAdministrador.prototype = {
     validacionDeFormulario();
   },
 
-  //!completar para que se muestren las preguntas
-
   construirElementoPregunta: function(pregunta){
     var contexto = this;
-    //asignar a nuevoitem un elemento li con clase "list-group-item", id "pregunta.id" y texto "pregunta.textoPregunta"
-    
     var nuevoItem;
     nuevoItem = document.createElement("li");
     $(nuevoItem).addClass('list-group-item');
@@ -86,7 +82,6 @@ VistaAdministrador.prototype = {
         }else{
           respuestas.push({ 'textoRespuesta': $(this).val(), 'cantidad': 0 });
         }
-        //completar
         return respuestaVacia
       })
 

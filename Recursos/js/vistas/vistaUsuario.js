@@ -23,6 +23,11 @@ var VistaUsuario = function(modelo, controlador, elementos) {
   this.modelo.borrarTodasPreguntas.suscribir(function () {
     contexto.reconstruirLista();
   });
+
+  this.modelo.votoAgregado.suscribir(function () {
+    contexto.reconstruirGrafico();
+  });
+
 };
 
 VistaUsuario.prototype = {
@@ -31,11 +36,9 @@ VistaUsuario.prototype = {
     this.reconstruirLista();
     var elementos = this.elementos;
     var contexto = this;
-    
     elementos.botonAgregar.click(function() {
       contexto.agregarVotos(); 
     });
-      
     this.reconstruirGrafico();
   },
 
@@ -60,16 +63,14 @@ VistaUsuario.prototype = {
     var contexto = this;
     var preguntas = this.modelo.preguntas;
     preguntas.forEach(function(clave){
-      //completar
-      //!agregar a listaPreguntas un elemento div con valor "clave.textoPregunta", texto "clave.textoPregunta", id "clave.id"
-      listaPreguntas.append($('<div>', {
+      listaPreguntas.append($("<div>", {
         value: clave.textoPregunta,
-        texto: clave.textoPregunta,
+        text: clave.textoPregunta,
         id: clave.id,
       }));
       var respuestas = clave.cantidadPorRespuesta;
       contexto.mostrarRespuestas(listaPreguntas,respuestas, clave);
-    })
+    });
   },
 
   //muestra respuestas
@@ -94,7 +95,9 @@ VistaUsuario.prototype = {
         var id = $(this).attr('id');
         var respuestaSeleccionada = $('input[name=' + id + ']:checked').val();
         $('input[name=' + id + ']').prop('checked',false);
-        contexto.controlador.agregarVoto(nombrePregunta,respuestaSeleccionada);
+        if(respuestaSeleccionada){
+          contexto.controlador.agregarVoto(nombrePregunta,respuestaSeleccionada);
+        };
       });
   },
 
@@ -103,8 +106,8 @@ VistaUsuario.prototype = {
     for(var i=1;i<respuestas.length;++i){
       if(respuestas[i][1]>0){
         seVotoAlgunaVez = true;
-      }
-    }
+      };
+    };
     var contexto = this;
     google.charts.load("current", {packages:["corechart"]});
     google.charts.setOnLoadCallback(drawChart);
@@ -126,7 +129,7 @@ VistaUsuario.prototype = {
       var chart = new google.visualization.PieChart(div);
       if(seVotoAlgunaVez){
         chart.draw(data, options);
-      }
-    }
+      };
+    };
   },
 };

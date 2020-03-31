@@ -10,12 +10,11 @@ var Modelo = function() {
   this.preguntas = localStorage.getItem("Preguntas")
     ? JSON.parse(localStorage.getItem('Preguntas'))
     : [];
-  console.log("desde modelo", this.Preguntas);
-  
   this.preguntaAgregada = new Evento(this);
   this.preguntaEliminada = new Evento(this);
   this.preguntaEditada = new Evento(this);
   this.borrarTodasPreguntas = new Evento(this);
+  this.votoAgregado = new Evento(this);
 };
 
 Modelo.prototype = { 
@@ -64,15 +63,23 @@ Modelo.prototype = {
     this.guardar();
     this.borrarTodasPreguntas.notificar();
   },
-//! ver como hacerle
+
   agregarVoto: function (nombrePregunta, respuestaSeleccionada){
-    var nuevaRespuesta = {'textoRespuesta': respuesta, 'cantidad': cantPorResp};
-    console.log('se agrega voto');
+    this.preguntas.forEach(element => {
+      if (element.textoPregunta === nombrePregunta) {
+        element.cantidadPorRespuesta.forEach(function(respuestaElegida){
+          if(respuestaElegida.textoRespuesta === respuestaSeleccionada){
+            respuestaElegida.cantidad += 1;
+          };
+        });
+      };
+    });
+    this.guardar();
+    this.votoAgregado.notificar();
   },
 
   //se guardan las preguntas
   guardar: function(){
     localStorage.setItem('Preguntas', JSON.stringify(this.preguntas));
-    console.log("Estado actual guardado");
   },
 };
